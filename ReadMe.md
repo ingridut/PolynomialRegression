@@ -1,4 +1,4 @@
-# Project 1
+# ONE PROJECT TO RULE THEM ALL
 
 *Goal*: Fit polynomials to the two-dimensional Franke's function, defined for x,y in [0, 1]. 
 
