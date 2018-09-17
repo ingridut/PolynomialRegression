@@ -12,4 +12,9 @@ def RidgeRegression(x, y, degrees=5, l=0.1):
     for i in range(degree+1):
         X[:,i] = np.power(x[:, 0], i)
 
-    pass
+    beta = (np.linalg.inv(X.T.dot(X) + l * np.identity(degree + 1))).dot(X.T).dot(y)
+
+    return beta
+
+
+
