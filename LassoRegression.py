@@ -3,20 +3,19 @@ import numpy as np
 from sklearn import linear_model
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from franke import FrankeFunction
+from frankeFunction import FrankeFunction
 from scipy import misc
 
-
-##
+##########
 #terrain1 = misc.imread('data.tif',flatten=0)
 
-x = np.arange(0, 1, 0.05)
-y = np.arange(0, 1, 0.05)
-x, y = np.meshgrid(x,y)
+x1 = np.arange(0, 1, 0.05)
+y1 = np.arange(0, 1, 0.05)
+x1, y1 = np.meshgrid(x1,y1)
 
-z = FrankeFunction(x,y)
-print(np.shape(z))
-##
+z1 = FrankeFunction(x1,y1)
+print(z1)
+##########
 
 
 # Creating data with random noise
@@ -49,12 +48,11 @@ reg = LinearRegression()
 reg.fit(X_train, Y_train)
 pred = reg.predict(X_test)
 print ("Prediction Shape: ", pred.shape)
-
-print('Coefficients: \n', reg.coef_)
+print ("Coefficients: ", reg.coef_)
 # The mean squared error
-print("Mean squared error: %.2f" % mean_squared_error(Y_test, pred))
+print ("Mean squared error: %.2f" % mean_squared_error(Y_test, pred))
 # Explained variance score: 1 is perfect prediction
-print('Variance score: %.2f' % r2_score(Y_test, pred))
+print ("Variance score: %.2f" % r2_score(Y_test, pred))
 
 # Plot
 plt.scatter(X_test,Y_test,color='green', label="Training Data")
@@ -76,10 +74,10 @@ print ("------------------------------------")
 
 print ("Lasso:")
 lasso = linear_model.Lasso(alpha=0.1)
-lasso.fit(X_train, Y_train)
+lasso.fit(X_train, Y_train)             # lasso.fit([x,y],z)
 predl = lasso.predict(X_test)
-print("Lasso Coefficient: ", lasso.coef_)
-print("Lasso Intercept: ", lasso.intercept_)
+print ("Lasso Coefficient: ", lasso.coef_)
+print ("Lasso Intercept: ", lasso.intercept_)
 plt.scatter(X_test, Y_test,color='green', label="Training Data")
 plt.plot(X_test, predl, color='blue', label="Lasso")
 plt.legend()
