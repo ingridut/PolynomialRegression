@@ -150,6 +150,42 @@ def scikitComparision():
     ax.plot_surface(x_, y_, predict.reshape(100,100), cmap=cm.coolwarm, linewidth=0, antialiased=False)
     plt.show()
 
+def LassoeTest():
+    x = np.random.rand(100, 1)
+    y = np.random.rand(100, 1)
+
+    z = FrankeFunction(x, y)
+
+    X = np.c_[x, y]
+    print(np.shape(X))
+    poly = PolynomialFeatures(degree=5)
+    X_ = poly.fit_transform(X)
+    print(np.shape(X_))
+
+    clf = linear_model.LassoCV()
+    clf.fit(X_, z)
+    beta = clf.coef_
+    print(beta)
+
+    x = np.arange(0, 1, 0.01)
+    y = np.arange(0, 1, 0.01)
+
+    x_, y_ = np.meshgrid(x, y)
+    x = x_.reshape(-1,1)
+    y = y_.reshape(-1,1)
+
+    M = np.c_[x, y]
+    M_ = poly.fit_transform(M)
+    print(np.shape(M_))
+    predict = M_.dot(beta.T)
+
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.plot_surface(x_, y_, predict.reshape(100,100), cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    plt.show()
+
+
+
 
 if __name__ == '__main__':
-    scikitComparision()
+    LassoeTest()
