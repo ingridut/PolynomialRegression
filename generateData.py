@@ -30,8 +30,8 @@ def loadData(filename):
 
 if __name__ == '__main__':
     # simple example of how the code works
-    data = generateData(100)
-    saveData(data)
+    data = generateData(1000)
+    saveData(data, 'data_for_part_1.npy')
 
-    data1 = loadData('data.npy')
+    data1 = loadData('data_for_part_1.npy')
     print(data1)
