@@ -15,3 +15,4 @@
 	- MSE, R^2 score
 	- Sammenligne beste med første beregning
  * Ekstra tid: Noise
+
