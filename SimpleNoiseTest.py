@@ -116,9 +116,19 @@ def scikitComparision():
     X_ = poly.fit_transform(X)
     #predict_ = poly.fit_transform(z)
 
-    clf = linear_model.Ridge()
+    """
+    M = np.c_[np.ones((len(x), 1)), x, y, x ** 2, x * y, y ** 2, \
+              x ** 3, x ** 2 * y, x * y ** 2, y ** 3, \
+              x ** 4, x ** 3 * y, x ** 2 * y ** 2, x * y ** 3, y ** 4, \
+              x ** 5, x ** 4 * y, x ** 3 * y ** 2, x ** 2 * y ** 3, x * y ** 4, y ** 5]"""
+
+    clf = linear_model.Ridge(alpha=0.1, fit_intercept=False)
     clf.fit(X_, z)
     beta = clf.coef_
+    print(beta)
+
+    beta2 = RidgeRegression(x, y, z)
+    print(beta2)
 
     x = np.arange(0, 1, 0.01)
     y = np.arange(0, 1, 0.01)
