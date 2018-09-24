@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Sep 21 10:40:11 2018
-
+Makes a prediction given a vector x, a vector y and a model beta
 @author: Betina
 """
 import numpy as np
-def predict(x, y, z, beta):
+def predict(x, y, beta):
     """
     Calculates the Mean Squared Error
     :param y: numpy vector with y data, size (n, 1)
