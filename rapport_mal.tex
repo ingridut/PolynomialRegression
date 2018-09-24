@@ -1,0 +1,228 @@
+\documentclass[norsk, a4paper]{report}
+\usepackage[T1]{fontenc}    % Riktig fontencoding
+\usepackage[font=small,labelfont=bf]{caption} % Fin figur-undertekst
+\usepackage{url}            % Skrive url-er
+\usepackage[norsk]{babel}   % Ordelingsregler, osv
+\usepackage[utf8]{inputenc} % Riktig tegnsett
+\usepackage{float}          % Figurer dukker opp der du ber om
+\usepackage{amsmath} 
+\usepackage{graphicx}       % Inkludere bilder
+\usepackage{listings}       % programeringskode
+% \usepackage{xspace}         % for \latex
+% \usepackage{ulem}           % gives double underline \uuline
+% \usepackage{booktabs}       % Ordentlige tabeller
+% \usepackage{textcomp}       % Den greske bokstaven micro i text-mode
+% \usepackage{units}          % Skrive enheter riktig
+% \usepackage{lipsum}         % Blindtekst
+% \usepackage{tikz}           % for creating graphics
+% \usepackage{epsfig} 
+% \usetikzlibrary{fpu} 
+
+% ---------------------------------------------------------
+
+% kapittelinndeling
+\renewcommand{\thepart}{\arabic{part})}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand{\thesubsection}{\alph{subsection})} % Alph = ABC, alph = abc
+\renewcommand{\thesubsubsection}{\roman{subsubsection})}
+
+% LaTeX symbol
+\newcommand{\latex}{\LaTeX\xspace}
+
+% --------------------------------------
+% For i, j, k vektor hatter
+% \newcommand{\ihat}{\hat{\textbf{\i}}}
+% \newcommand{\jhat}{\hat{\textbf{\j}}}
+% \newcommand{\khat}{\hat{\textbf{k}}}
+% --------------------------------------
+
+
+% \section*{Innledning} asterisk fjerner nummer
+%---------------------------------------------------------
+
+\pdfinfo{
+%   /Title () 
+	/Author (Henrik Løland Gjestang) 
+	/Creator () 
+	/Producer () 
+	/Subject () 
+	/Keywords () 
+}
+
+% ---------------------------------------------------------
+
+% Programeringskode:
+% \begin{lstlisting}[frame = single]
+% Skriv koden din her
+% \end{lstlisting}
+
+
+% Mal for å lime inn figur:
+% \begin{figure}[H]
+% \begin{center}
+%  \includegraphics[width = 100mm]{figur.png}
+%  \caption{Figurtekst}
+%  \label{fig:fig1}
+%  \end{center}
+% \end{figure}
+
+% Refrence
+% \label{fig:fig1}
+
+% Dobbelfigur:
+% \begin{figure}[ht]
+% \centering
+% \begin{minipage}[b]{0.45\linewidth}
+% \includegraphics[width = 60mm]{foobar.png}
+% \caption{}
+% \label{fig:minipage1}
+% \end{minipage}
+% \quad
+% \begin{minipage}[b]{0.45\linewidth}
+% \includegraphics[width = 60mm]{foobar.png}
+% \caption{}
+% \label{fig:minipage2}
+% \end{minipage}
+% \end{figure}
+
+
+% Dette fjerner sidetall:
+% \thispagestyle{empty}
+% \pagestyle{empty}
+
+
+% Matriser:
+% \[
+% \left( \begin{array}{ccc}
+% 1 & 0 & 0 \\
+% 0 & 1 & 0 \\
+% 0 & 0 & 1
+% \end{array} \right)
+% \]
+
+% A' = \begin{bmatrix*}[r]~ & E_1 & E_2 & E_3 & E_4 & E_5 \\
+% V_4 & 0 & -1 & 1 & 0 & 0   \\[0.3em]
+% V_1 & 0 & 0 & 0 & -1 & -1  \\[0.3em]
+% V_3 & 1 & 0 & -1 & 1 &  0  \\[0.3em]
+% V_2 & -1 & 0 & 0 & 0 & 1
+% \end{bmatrix*}
+
+
+% Tabeller:
+% \begin{table}[h!]
+% \centering
+% \begin{tabular}{||c c c c c||} 
+% \hline
+% 0 & 0 & 0 & 0 & 0 \\ [0.5ex] 
+% \hline\hline
+% 0 & 0 & 0 & 0 & 0 \\ 
+% 0 & 0 & 0 & 0 & 0 \\[1ex] 
+% \hline
+% \end{tabular}
+% \caption{Figurtekst her}
+% \end{table}
+
+
+% liste opp funksjoner
+% \begin{align} % sett på * etter align for fjerne nummer
+% \text{a og d} &= x_{1} + \overline{x_{2}x_{0}} + x_{2}x_{0} \\
+% b &= \overline{x_{2}x_{0}} + \overline{x_{2}} \\
+% c &= x_{2} + x_{0} + \overline{x_{1}} \\
+% e &= \overline{x_{2}x_{0}} + x_{1}\overline{x_{0}} \\
+% f &= \overline{x_{1}x_{0}} + x_{2} \\
+% g &= x_{1} + x_{2}
+% \end{align} 
+
+
+% Oppbyggning:
+% \tableofcontents
+% \section{Introduksjon}
+% \subsection{Forberedelser}
+% \subsubsection{title}
+% \newpage
+
+% Notater:
+% kommenter ut linjer: LCTRL + *
+% gangetegn: \cdot
+% ingen indentering: \noindent
+% mellomrom mellom tekst: \medbreak eller \quad
+
+%------------------------------------------------------------
+
+
+% Forside
+\begin{document}
+\begin{titlepage}
+\begin{center}
+
+\textsc{}\\[1.0cm]
+\textsc{\Large FYS-STK4155}\\[0.5cm]
+\rule{\linewidth}{0.5mm} \\[0.4cm]
+{ \huge \bfseries Machine Learning}\\[0.10cm]
+\rule{\linewidth}{0.5mm} \\[1.5cm]
+\textsc{\Large project 1}\\
+\bigbreak
+\textsc{\Large henriklg}\\
+\textsc{\Large mona}\\
+\textsc{}\\[7.0cm]
+
+% Av hvem?(kopier for flere personer, feks ved samarbeid)
+\begin{minipage}{0.69\textwidth}
+    \begin{center} \large
+        Henrik Løland Gjestang\\ \url{henriklg@student.matnat.uio.no} \\
+        %Henrik Løland Gjestang\\ \url{henriklg@student.matnat.uio.no} \\[0.8cm]
+    \end{center}
+\end{minipage}
+
+\vfill
+
+% Dato nederst
+\large{Dato: \today}
+
+\end{center}
+\end{titlepage}
+
+\section{Abstract}
+The abstract gives the reader a quick overview of what has been done and the most important results.
+
+%-----------------------------------------------------------
+\tableofcontents
+\newpage
+%-----------------------------------------------------------
+
+% How to write a scientific report:
+% https://github.com/CompPhysics/ComputationalPhysics/blob/master/doc/pub/projectwriting/pdf/projectwriting-print.pdf
+
+% Example of report
+% https://github.com/CompPhysics/ComputationalPhysics/blob/master/doc/Projects/ProjectExample/ProjectExample.pdf
+
+% How the report is evaluated:
+% https://github.com/CompPhysics/MachineLearning/blob/master/doc/Projects/2018/HowWeEvaluateProjects/projecteval.txt
+
+
+\section{Introduction}
+Explain the aims and rationale for the physics case and what you have done. At the end of the introduction you should give a brief summary of the structure of the report. Motivate the reader and give overarching ideas. Describe what has been done and the structure of the report (how is it organized).
+
+
+\section{Method}
+Theoretical models and technicalities. Describe how you implemented the methods and also say something about the structure and the algorithms used and central parts of code. Plug in some calculations to demonstrate your code, such as selected runs used to validate and verify results.
+
+
+\section{Results and discussion}
+Present the results. Give critical discussion of your work and place it in the correct context. Try to relate your work to other calculations/studies. The reader should be able to reproduce your calculations if they wanted to. Remember to explain all input variables. Make sure figures and tables contain enough information in their captions/labels/axis so that the reader can gain a first impression of your work.
+
+
+\section{Conclusions and perspectives}
+State your main findings and interpretations. Try as far as possible to present perspectives for future work. Discuss the pros and cons of the methods and possible improvements.
+
+
+\section{Appendix}
+Appendix with extra material. Additional calculations used to validate code. Listing of code if necessary. Consider moving parts of material from methods section to appendix.
+
+
+\section{Bibliography}
+Give references to material you base your work on, either scientific articles/reports or books/curriculum. Refer to articles as: Name of author, journal, volume, page and year in parenthesis. Refer to books as: name of author, title of book, publisher, place and year, eventual page numbers.
+
+
+
+\end{document}
