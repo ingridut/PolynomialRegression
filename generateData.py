@@ -1,4 +1,3 @@
-import pickle
 import numpy as np
 
 """
@@ -14,24 +13,11 @@ def generateData(size):
     y = np.random.rand(size, 1)
     return np.c_[x, y]
 
-def saveData(data, filename='data.npy'):
-    """
-    Saves data in a file
-    :param data: numpy array, data to be saved
-    :param filename: filename of saved data
-    """
-    np.save(filename, data)
-
-def loadData(filename):
-    """
-    Loads data from file
-    """
-    return np.load(filename)
-
 if __name__ == '__main__':
     # simple example of how the code works
+    # Generate data
     data = generateData(1000)
-    saveData(data, 'data_for_part_1.npy')
+    np.save('data_for_part_1.npy', data)
 
-    data1 = loadData('data_for_part_1.npy')
-    print(np.shape(data1))
+    # Load generated data
+    data1 = np.load('data_for_part_1.npy')
