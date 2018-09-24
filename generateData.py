@@ -34,4 +34,4 @@ if __name__ == '__main__':
     saveData(data, 'data_for_part_1.npy')
 
     data1 = loadData('data_for_part_1.npy')
-    print(data1)
+    print(np.shape(data1))
