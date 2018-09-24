@@ -10,8 +10,8 @@ def generateData(size):
     :param size: length of output array
     :return: numpy array with random numbers between 0 and 1, shape: (size, 2)
     """
-    x = np.random.rand(100, 1)
-    y = np.random.rand(100, 1)
+    x = np.random.rand(size, 1)
+    y = np.random.rand(size, 1)
     return np.c_[x, y]
 
 def saveData(data, filename='data.npy'):
