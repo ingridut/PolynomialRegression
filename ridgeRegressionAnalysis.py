@@ -34,7 +34,7 @@ def MeanSquaredError(z, z_hat):
     MSE = np.square(z-z_hat).mean()
     return MSE
 
-def betaConfInt(beta, z, X, var2, alpha=0.025):
+def betaConfInt(beta, X, var2, alpha=0.025):
     """
     Comput a 1-2*alpha confidence interval for the beta values
     :param beta_co_mat:
@@ -42,8 +42,10 @@ def betaConfInt(beta, z, X, var2, alpha=0.025):
     :return:
     """
     v = np.linalg.inv(X.T.dot(X))
-    i_minus = beta-np.power(z, 1-alpha).dot(v)*np.sqrt(var2)
-    i_plus = beta+np.power(z, 1-alpha).dot(v)*np.sqrt(var2)
+    i_minus = beta-v*1.96*np.sqrt(var2)
+    i_plus = beta+v*1.96*np.sqrt(var2)
+
+    return i_minus, i_plus
 
 def varBeta(X, var2):
     var = np.linalg.inv(X.T.dot(X))*(var2)
@@ -128,9 +130,14 @@ if __name__ == "__main__":
     M = poly5.fit_transform(M_)
     zpredict_5 = M.dot(beta_5)
 
-    # Calculate beta variance
+    # Calculate variance
+    var2 = var2(z, zpredict_5, p=21)
+    conf1, conf2 = betaConfInt(beta_5, M, var2, alpha=0.025)
 
-
+    # Print confidence interval
+    print()
+    for i in range(len(beta)):
+        print('Beta {0}: [{1}, {2}]\n'.format(beta[i], conf1[i], conf2[i]))
 
     # Choose optimal MSE, R2-score
     print('=== INVESTIGATE DEGREES ===')
