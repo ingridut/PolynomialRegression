@@ -41,7 +41,7 @@ def betaConfInt(beta, X, var2, alpha=0.025):
     :param alpha:
     :return:
     """
-    v = np.linalg.inv(X.T.dot(X))
+    v = np.diag(np.linalg.inv(X.T.dot(X)))
     i_minus = beta-v*1.96*np.sqrt(var2)
     i_plus = beta+v*1.96*np.sqrt(var2)
 
@@ -135,12 +135,12 @@ if __name__ == "__main__":
     conf1, conf2 = betaConfInt(beta_5, M, var2, alpha=0.025)
 
     # Print confidence interval
-    print()
-    for i in range(len(beta)):
-        print('Beta {0}: [{1}, {2}]\n'.format(beta[i], conf1[i], conf2[i]))
+    print("BETA CONFIDENCE INTERVAL (DEGREE 5)")
+    for i in range(len(beta_5)):
+        print('Beta {0}: [{1:.5f}, {2:.5f}]'.format(i, conf1[i], conf2[i]))
 
     # Choose optimal MSE, R2-score
-    print('=== INVESTIGATE DEGREES ===')
+    print('\nINVESTIGATE DEGREES')
     MSE_3 = MeanSquaredError(z, zpredict_3)
     R2_3 = R2(z, zpredict_3)
     print('--- Degrees: 3 ---\n Mean Squared error: {0:.7f} \n R2 Score: {1:.7f}\n'.format(MSE_3, R2_3))
