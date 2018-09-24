@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.preprocessing import PolynomialFeatures
 
 #Ordinary Least Squared function
 def ols(x, y, z, degree = 5):
