@@ -1,0 +1,6 @@
+% How the report is evaluated:
+% https://github.com/CompPhysics/MachineLearning/blob/master/doc/Projects/2018/HowWeEvaluateProjects/projecteval.txt
+
+% https://github.com/CompPhysics/MachineLearning/blob/master/doc/Textbooks/introduction-machine-learning-python.pdf
+% - sort code into functions/modules
+% - write unit tests and bench marks. take note of results for further testing
