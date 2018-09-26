@@ -5,13 +5,16 @@ Ridge regression analysis of Franke's function
 from RidgeRegression import RidgeRegression
 import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 
-def FrankeFunction(x,y):
+def FrankeFunction(x,y, noise=0.1):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
     term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
     term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
     term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
-    return (term1 + term2 + term3 + term4)
+    return (term1 + term2 + term3 + term4 + noise*np.random.randn(len(x), 1))
 
 def R2(zReal, zPredicted):
     """
@@ -102,82 +105,21 @@ def k_fold_validation(x, y, z, k=5):
 
     return betas, MSE, R2score
 
-if __name__ == "__main__":
-    # Load random data, 1000 points
-    X = np.load('data_for_part_1.npy')
-    x = X[:, 0]
-    y = X[:, 1]
+def plotFrankes(num_of_points, beta, degree=5):
 
-    # Compute Franke's function
-    z = FrankeFunction(x, y)
+    x = np.linspace(0, 1, num_of_points)
+    y = np.arange(0, 1, num_of_points)
 
-    # calculate beta values with various degrees
-    beta_3 = RidgeRegression(x, y, z, 3, l=0)
-    beta_4 = RidgeRegression(x, y, z, 4, l=0)
-    beta_5 = RidgeRegression(x, y, z, 5, l=0)
+    x_, y_ = np.meshgrid(x, y)
+    x = x_.reshape(-1,1)
+    y = y_.reshape(-1,1)
 
-    # calculate the predicted z-values
-    M_ = np.c_[x, y]
-    poly3 = PolynomialFeatures(3)
-    M = poly3.fit_transform(M_)
-    zpredict_3 = M.dot(beta_3)
+    M = np.c_[x, y]
+    poly = PolynomialFeatures(degree=5)
+    M_ = poly.fit_transform(M)
+    predict = M_.dot(beta)
 
-    poly4 = PolynomialFeatures(4)
-    M = poly4.fit_transform(M_)
-    zpredict_4 = M.dot(beta_4)
-
-    poly5 = PolynomialFeatures(5)
-    M = poly5.fit_transform(M_)
-    zpredict_5 = M.dot(beta_5)
-
-    # Calculate variance
-    var2 = var2(z, zpredict_5, p=21)
-    conf1, conf2 = betaConfInt(beta_5, M, var2, alpha=0.025)
-
-    # Print confidence interval
-    print("BETA CONFIDENCE INTERVAL (DEGREE 5)")
-    for i in range(len(beta_5)):
-        print('Beta {0}: [{1:.5f}, {2:.5f}]'.format(i, conf1[i], conf2[i]))
-
-    # Choose optimal MSE, R2-score
-    print('\nINVESTIGATE DEGREES')
-    MSE_3 = MeanSquaredError(z, zpredict_3)
-    R2_3 = R2(z, zpredict_3)
-    print('--- Degrees: 3 ---\n Mean Squared error: {0:.7f} \n R2 Score: {1:.7f}\n'.format(MSE_3, R2_3))
-    MSE_4 = MeanSquaredError(z, zpredict_4)
-    R2_4 = R2(z, zpredict_4)
-    print('--- Degrees: 4 ---\n Mean Squared error: {0:.7f} \n R2 Score: {1:.7f}\n'.format(MSE_4, R2_4))
-    MSE_5 = MeanSquaredError(z, zpredict_5)
-    R2_5 = R2(z, zpredict_5)
-    print('--- Degrees: 5 ---\n Mean Squared error: {0:.7f} \n R2 Score: {1:.7f}\n'.format(MSE_4, R2_4))
-
-    # calculate beta values with various lambdas
-    lambdas = [0, 0.2, 0.4, 0.6, 0.8, 1]
-    betas = []
-    for la in lambdas:
-        betas.append(RidgeRegression(x, y, z, 5, l=la))
-
-    # Choose optimal MSE, R2-score
-    poly5 = PolynomialFeatures(5)
-    M = poly5.fit_transform(M_)
-    MSEs = []
-    R2s = []
-    for b in betas:
-        zpredict = M.dot(b)
-        MSEs.append(MeanSquaredError(z, zpredict))
-        R2s.append(R2(z, zpredict))
-
-    print('INVESTIGATE LAMBDA VALUES')
-    for i in range(len(betas)):
-        print('--- Lambda value: {0} ---\n Mean Squared error: {1:.7f} \n R2 Score: {2:.7f}\n'.format(lambdas[i],
-                                                                                                      MSEs[i], R2s[i]))
-
-    # Further improve with k-fold validation
-    betas, MSEs, R2scores = k_fold_validation(x, y, z, k=5)
-    print('K-FOLD VALIDATION ')
-    for i in range(5):
-        print('--- Fold nr: {0} ---\n Mean Squared error: {1:.7f} \n R2 Score: {2:.7f}\n'.format(i+1, MSEs[i], R2scores[i]))
-
-
-    # choose optimal MSE,
-
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.plot_surface(x_, y_, predict.reshape(100,100), cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    plt.show()
