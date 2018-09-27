@@ -19,7 +19,7 @@ def RidgeRegression(x, y, z, degree=5, l=0.1):
     X = np.c_[x_train,y_train]
     poly = PolynomialFeatures(degree)
     X_ = poly.fit_transform(X)
-    ridge = linear_model.RidgeCV()
+    ridge = linear_model.RidgeCV(alphas=np.array([10**(-6)]))
     ridge.fit(X_, z)
     print ("X_: ", np.shape(X_))
     beta = ridge.coef_
@@ -48,4 +48,4 @@ if __name__ == '__main__':
     y = np.arange(0, 1, 0.05).reshape((20,1))
     z = FrankeFunction(x, y)
 
-    beta = RidgeRegression(x,y,z,14)
+    beta = RidgeRegression(x,y,z,5)

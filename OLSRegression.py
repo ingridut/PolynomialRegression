@@ -9,21 +9,22 @@ from matplotlib import cm
 from frankeFunction import FrankeFunction
 from scipy import misc
 
-def LassoRegression(x, y, z, degree=5, alpha=10**(-7), verbose=False):
+def OSLRegression(x, y, z, degree=5, l=0.1):
     # Split into training and test
     x_train = np.random.rand(100,1)
     y_train = np.random.rand(100,1)
     z = FrankeFunction(x_train,y_train)
 
-    # train and find design matrix X_
+    # traning data and finding design matrix X_
     X = np.c_[x_train,y_train]
     poly = PolynomialFeatures(degree)
     X_ = poly.fit_transform(X)
-    clf = linear_model.Lasso(alpha)
+    clf = linear_model.LassoCV()
     clf.fit(X_, z)
+    print ("X_: ", np.shape(X_))
     beta = clf.coef_
 
-    # predict
+    # predicting and preparing plot
     x_, y_ = np.meshgrid(x, y)
     x = x_.reshape(-1,1)
     y = y_.reshape(-1,1)
@@ -31,15 +32,7 @@ def LassoRegression(x, y, z, degree=5, alpha=10**(-7), verbose=False):
     M_ = poly.fit_transform(M)
     predict = M_.dot(beta.T)
 
-    if verbose:
-        print ("x: ", np.shape(x))
-        print ("y: ", np.shape(y))
-        print ("M: ", np.shape(M))
-        print ("M_: ", np.shape(M_))
-        print ("predict: ", np.shape(predict))
-
-
-    # plot
+    # plotting
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.plot_surface(x_,y_,predict.reshape(20,20),cmap=cm.coolwarm,linewidth=0,antialiased=False)
@@ -54,4 +47,4 @@ if __name__ == '__main__':
     y = np.arange(0, 1, 0.05).reshape((20,1))
     z = FrankeFunction(x, y)
 
-    beta = LassoRegression(x,y,z,15,alpha=10**(-7),verbose=True)
+    beta = OSLRegression(x,y,z,14)
