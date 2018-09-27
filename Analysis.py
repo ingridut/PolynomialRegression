@@ -14,7 +14,7 @@ def FrankeFunction(x,y, noise=0.1):
     term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
     term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
     term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
-    return (term1 + term2 + term3 + term4 + noise*np.random.randn(len(x), 1))
+    return (term1 + term2 + term3 + term4 + noise*np.random.randn(len(x)))
 
 def R2(zReal, zPredicted):
     """
@@ -37,26 +37,58 @@ def MeanSquaredError(z, z_hat):
     MSE = np.square(z-z_hat).mean()
     return MSE
 
-def betaConfInt(beta, X, var2, alpha=0.025):
+def betaConfInt(beta, X, var2):
     """
-    Comput a 1-2*alpha confidence interval for the beta values
+    Compute a 90% confidence interval for the beta values
     :param beta_co_mat:
     :param alpha:
     :return:
     """
     v = np.diag(np.linalg.inv(X.T.dot(X)))
-    i_minus = beta-v*1.96*np.sqrt(var2)
-    i_plus = beta+v*1.96*np.sqrt(var2)
+    i_minus = beta-v*1.645*np.sqrt(var2)
+    i_plus = beta+v*1.645*np.sqrt(var2)
 
     return i_minus, i_plus
 
 def varBeta(X, var2):
+    """
+    Computes the variance of the beta values
+    :param X: polynomial matrix
+    :param var2: variance squared
+    :return: variance of beta
+    """
     var = np.linalg.inv(X.T.dot(X))*(var2)
     return var
 
-def var2(z, z_hat, p):
+def var2(z, z_hat, p=5):
+    """
+    Computes the variance
+    :param z: real z-values
+    :param z_hat: model z-values
+    :param p: degree of polynomial fit
+    :return: variance squared
+    """
     nom = np.square(z-z_hat)
     return np.sum(nom)/(len(z)-p-1)
+
+def bias(z, z_hat):
+    """
+    Computes the bias in the model
+    :param z: real z-values
+    :param z_hat: model z-values
+    :return: bias squared
+    """
+    z_stroke = np.mean(z_hat)
+    return (np.square(z-z_stroke)).mean()
+
+def var_f(z_hat):
+    """
+    Computes the variance of the model
+    :param z_hat: model z-values
+    :return: variance
+    """
+    z_stroke = np.mean(z_hat)
+    return np.square(z_hat-z_stroke).mean()
 
 def k_fold_validation(x, y, z, k=5):
     data_set = np.c_[x, y, z]
