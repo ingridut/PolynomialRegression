@@ -15,19 +15,17 @@ def RidgeRegression(x, y, z, degree=5, l=0.1):
     y_train = np.random.rand(100,1)
     z = FrankeFunction(x_train,y_train)
 
-    X = np.c_[x_train,y_train]                         # (20, 2)
-    # finding design matrix X_
+    # training and finding design matrix X_
+    X = np.c_[x_train,y_train]
     poly = PolynomialFeatures(degree)
-    X_ = poly.fit_transform(X)                         # (20,) (21 bc deg 5)
-    ridge = linear_model.Redge()
+    X_ = poly.fit_transform(X)
+    ridge = linear_model.RidgeCV()
     ridge.fit(X_, z)
     print ("X_: ", np.shape(X_))
-    #predict = np.append(z,[1])
-    #predict_ = predict.reshape(-21,21)
-    #beta = clf.predict(predict_)
-    beta = ridge.coef_                                    # (21,)
-    intercept = ridge.intercept_
+    beta = ridge.coef_
+    #intercept = ridge.intercept_
 
+    # predict data and prepare for plotting
     x_, y_ = np.meshgrid(x, y)
     x = x_.reshape(-1,1)
     y = y_.reshape(-1,1)
@@ -35,6 +33,7 @@ def RidgeRegression(x, y, z, degree=5, l=0.1):
     M_ = poly.fit_transform(M)
     predict = M_.dot(beta.T)
 
+    # show figure
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.plot_surface(x_,y_,predict.reshape(20,20),cmap=cm.coolwarm,linewidth=0,antialiased=False)

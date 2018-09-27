@@ -15,18 +15,16 @@ def LassoRegression(x, y, z, degree=5, l=0.1):
     y_train = np.random.rand(100,1)
     z = FrankeFunction(x_train,y_train)
 
-    X = np.c_[x_train,y_train]                         # (20, 2)
-    # finding design matrix X_
+    # train and find design matrix X_
+    X = np.c_[x_train,y_train]
     poly = PolynomialFeatures(degree)
-    X_ = poly.fit_transform(X)                         # (20,) (21 bc deg 5)
+    X_ = poly.fit_transform(X)
     clf = linear_model.LassoCV()
     clf.fit(X_, z)
     print ("X_: ", np.shape(X_))
-    #predict = np.append(z,[1])
-    #predict_ = predict.reshape(-21,21)
-    #beta = clf.predict(predict_)
-    beta = clf.coef_                                    # (21,)
+    beta = clf.coef_
 
+    # predict
     x_, y_ = np.meshgrid(x, y)
     x = x_.reshape(-1,1)
     y = y_.reshape(-1,1)
@@ -34,6 +32,7 @@ def LassoRegression(x, y, z, degree=5, l=0.1):
     M_ = poly.fit_transform(M)
     predict = M_.dot(beta.T)
 
+    # plot
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.plot_surface(x_,y_,predict.reshape(20,20),cmap=cm.coolwarm,linewidth=0,antialiased=False)
