@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 
-def FrankeFunction(x,y, noise=0.1):
+def FrankeFunction(x,y, noise=0.01):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
     term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
     term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
@@ -37,16 +37,44 @@ def MeanSquaredError(z, z_hat):
     MSE = np.square(z-z_hat).mean()
     return MSE
 
-def betaConfInt(beta, X, var2):
+
+def betaConfidenceInterval_Ridge(z_real, beta, X, l):
     """
-    Compute a 90% confidence interval for the beta values
-    :param beta_co_mat:
-    :param alpha:
-    :return:
+    Compute a 90% confidence interval for the beta coefficients - Ridge
     """
-    v = np.diag(np.linalg.inv(X.T.dot(X)))
-    i_minus = beta-v*1.645*np.sqrt(var2)
-    i_plus = beta+v*1.645*np.sqrt(var2)
+
+    # Calculate variance squared in the error
+    z_hat = X.dot(beta)
+    N, P = np.shape(X)
+    sigma_2 = (np.sum(np.power((z_real-z_hat), 2)))/N
+
+    # Calculate the variance squared of the beta coefficients
+    XTX= X.T.dot(X)
+    R, R = np.shape(XTX)
+    var_beta = np.diag(sigma_2*np.linalg.inv((XTX + l*np.identity(R))))
+
+    # The square root of var_beta is the standard error. Use it to calculate confidence intervals
+    i_minus = beta - 1.645*np.sqrt(var_beta/N)
+    i_plus = beta + 1.645*np.sqrt(var_beta/N)
+
+    return i_minus, i_plus
+
+def betaConfidenceInterval_OLS(z_real, beta, X):
+    """
+    Compute a 90% confidence interval for the beta coefficients
+    """
+
+    # Calculate variance squared in the error
+    z_hat = X.dot(beta)
+    N, P = np.shape(X)
+    sigma_2 = (np.sum(np.power((z_real-z_hat), 2)))/N
+
+    # Calculate the variance squared of the beta coefficients
+    var_beta = np.diag(sigma_2*np.linalg.inv((X.T.dot(X))))
+
+    # The square root of var_beta is the standard error. Use it to calculate confidence intervals
+    i_minus = beta - 1.645*np.sqrt(var_beta/N)
+    i_plus = beta + 1.645*np.sqrt(var_beta/N)
 
     return i_minus, i_plus
 
@@ -60,7 +88,7 @@ def varBeta(X, var2):
     var = np.linalg.inv(X.T.dot(X))*(var2)
     return var
 
-def var2(z, z_hat, p=5):
+def var2(z, z_hat, p=21):
     """
     Computes the variance
     :param z: real z-values
@@ -137,21 +165,21 @@ def k_fold_validation(x, y, z, k=5):
 
     return betas, MSE, R2score
 
-def plotFrankes(num_of_points, beta, degree=5):
+def plotFrankes(beta, degree=5):
 
-    x = np.linspace(0, 1, num_of_points)
-    y = np.arange(0, 1, num_of_points)
+    x = np.arange(0, 1, 0.01)
+    y = np.arange(0, 1, 0.01)
 
     x_, y_ = np.meshgrid(x, y)
     x = x_.reshape(-1,1)
     y = y_.reshape(-1,1)
 
     M = np.c_[x, y]
-    poly = PolynomialFeatures(degree=5)
+    poly = PolynomialFeatures(degree=degree)
     M_ = poly.fit_transform(M)
     predict = M_.dot(beta)
 
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    ax.plot_surface(x_, y_, predict.reshape(100,100), cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    ax.plot_surface(x_, y_, predict.reshape(100, 100), cmap=cm.coolwarm, linewidth=0, antialiased=False)
     plt.show()
