@@ -19,7 +19,7 @@ def LassoRegression(x, y, z, degree=5, alpha=10**(-7), verbose=False):
     X = np.c_[x_train,y_train]
     poly = PolynomialFeatures(degree)
     X_ = poly.fit_transform(X)
-    clf = linear_model.Lasso(alpha)
+    clf = linear_model.Lasso(alpha, fit_intercept=False)
     clf.fit(X_, z)
     beta = clf.coef_
 

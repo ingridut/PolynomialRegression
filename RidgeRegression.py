@@ -8,8 +8,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from frankeFunction import FrankeFunction
 from scipy import misc
+from ConfidenceInterval import mean_confidence_interval
 
-def RidgeRegression(x, y, z, degree=5, l=0.1):
+def RidgeRegression(x, y, z, degree=5, alpha=10**(-6), verbose=False):
     # Split into training and test
     x_train = np.random.rand(100,1)
     y_train = np.random.rand(100,1)
@@ -19,9 +20,8 @@ def RidgeRegression(x, y, z, degree=5, l=0.1):
     X = np.c_[x_train,y_train]
     poly = PolynomialFeatures(degree)
     X_ = poly.fit_transform(X)
-    ridge = linear_model.RidgeCV(alphas=np.array([10**(-6)]))
+    ridge = linear_model.RidgeCV(alphas=np.array([alpha]))
     ridge.fit(X_, z)
-    print ("X_: ", np.shape(X_))
     beta = ridge.coef_
     #intercept = ridge.intercept_
 
@@ -32,6 +32,12 @@ def RidgeRegression(x, y, z, degree=5, l=0.1):
     M = np.c_[x, y]
     M_ = poly.fit_transform(M)
     predict = M_.dot(beta.T)
+
+    if verbose:
+        print ("X_: ", np.shape(X_))
+        print ("M: ", np.shape(M))
+        print ("M_: ", np.shape(M_))
+        print ("predict: ", np.shape(predict))
 
     # show figure
     fig = plt.figure()
@@ -48,4 +54,8 @@ if __name__ == '__main__':
     y = np.arange(0, 1, 0.05).reshape((20,1))
     z = FrankeFunction(x, y)
 
-    beta = RidgeRegression(x,y,z,5)
+    beta = RidgeRegression(x,y,z,5,10**(-6),True)
+
+    beta_list = beta.ravel().tolist()
+    cofint = mean_confidence_interval(beta_list)
+    print (cofint)
