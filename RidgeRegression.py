@@ -55,6 +55,7 @@ if __name__ == '__main__':
     z = FrankeFunction(x, y)
 
     beta = RidgeRegression(x,y,z,5,10**(-6),True)
+    print (beta)
 
     beta_list = beta.ravel().tolist()
     cofint = mean_confidence_interval(beta_list)
