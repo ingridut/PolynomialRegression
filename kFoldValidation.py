@@ -12,9 +12,6 @@ def k_fold_validation(x, y, z, k=5, method='Ridge'):
     folds=0
 
     MSE = []
-    R2score = []
-    f_bias = []
-    f_var = []
     betas = []
 
     while folds < len(x):
@@ -49,9 +46,9 @@ def k_fold_validation(x, y, z, k=5, method='Ridge'):
 
         # calculate MSE and R2scores
         MSE.append(MeanSquaredError(z_test, z_hat))
-        R2score.append(R2(z_test, z_hat))
-        f_bias.append(bias(z_test, z_hat))
-        f_var.append(var_f(z_hat))
+
         folds += set_size
 
-    return betas, MSE, R2score, f_bias, f_var
+    M_MSE = np.mean(MSE)
+
+    return M_MSE
