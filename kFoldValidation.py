@@ -1,8 +1,10 @@
 from RidgeRegression import RidgeRegression
 from Lasso import Lasso
+from OrdinaryLeastSquares import ols
 import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
 from Analysis import MeanSquaredError, R2, bias, var_f
+
 
 
 def k_fold_validation(x, y, z, k=5, method='Ridge'):
@@ -30,8 +32,7 @@ def k_fold_validation(x, y, z, k=5, method='Ridge'):
         elif method == 'Lasso':
             beta = Lasso(x_t, y_t, z_t, degree=5)
         else:
-            #OLS goes here
-            pass
+            beta = ols(x_t, y_t, z_t, degree=5)
 
         # evaluation/test
         x_test = data_set[folds:folds+set_size, 0]
