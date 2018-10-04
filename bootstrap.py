@@ -4,10 +4,10 @@ from sklearn.preprocessing import PolynomialFeatures
 from RidgeRegression import RidgeRegression
 from Lasso import Lasso
 from OrdinaryLeastSquares import ols
-from Analysis import FrankeFunction
+from Analysis import R2
 import matplotlib.pyplot as plt
 
-def bootstrap(x, y, z, p_degree, n_bootstrap=100, method='Ridge'):
+def bootstrap(x, y, z, p_degree, method, n_bootstrap=100):
     # Randomly shuffle data
     data_set = np.c_[x, y, z]
     np.random.shuffle(data_set)
@@ -27,6 +27,7 @@ def bootstrap(x, y, z, p_degree, n_bootstrap=100, method='Ridge'):
     Z_predict = []
 
     MSE = []
+    R2s = []
     for i in range(n_bootstrap):
         x_, y_, z_ = resample(x_train, y_train, z_train)
 
@@ -35,8 +36,11 @@ def bootstrap(x, y, z, p_degree, n_bootstrap=100, method='Ridge'):
             beta = RidgeRegression(x_, y_, z_, degree=p_degree, l=0)
         elif method == 'Lasso':
             beta = Lasso(x_, y_, z_, degree=p_degree)
-        else:
+        elif method == 'OLS':
             beta = ols(x_, y_, z_, degree=p_degree)
+        else:
+            print('ERROR: Cannot recognize method')
+            return 0
 
         M_ = np.c_[x_test, y_test]
         poly = PolynomialFeatures(p_degree)
@@ -47,33 +51,12 @@ def bootstrap(x, y, z, p_degree, n_bootstrap=100, method='Ridge'):
 
         # Calculate MSE
         MSE.append(np.mean((z_test - z_hat)**2))
+        R2s.append(R2(z_test, z_hat))
 
     # Calculate MSE, Bias and Variance
     MSE_M = np.mean(MSE)
+    R2_M = np.mean(R2s)
     bias = np.mean((z_test - np.mean(Z_predict, axis=0, keepdims=True))**2)
     variance = np.mean (np.var(Z_predict, axis=0, keepdims=True))
-    return MSE_M, bias, variance
-
-if __name__ == '__main__':
-    X = np.load('data_for_part_1.npy')
-    x = X[:, 0]
-    y = X[:, 1]
-    z = FrankeFunction(x, y, noise=0)
-
-    B = []
-    V = []
-    M = []
-
-    for i in range(1, 10):
-        MSE, b, v = bootstrap(x, y, z, p_degree=i)
-        M.append(MSE)
-        V.append(v)
-        B.append(b)
-
-    a = np.linspace(1, 9, 9)
-    plt.plot(a, M)
-    plt.plot(a, V)
-    plt.plot(a, B)
-    plt.show()
-
+    return MSE_M, R2_M, bias, variance
 
