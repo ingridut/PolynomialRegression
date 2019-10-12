@@ -1,5 +1,7 @@
 # ONE PROJECT TO RULE THEM ALL
 
+Project 1 in FYS-STK4155 Anvendt dataanalyse og maskinlæring, Fall 2018
+
 *Goal*: Fit polynomials to the two-dimensional Franke's function, defined for x,y in [0, 1]. 
 
 ### a) Ordinary Least Square on the Franke function with resampling
